@@ -2,7 +2,7 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AuditBlueprint, PipelineSpecDSL } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+const ai = new GoogleGenAI({ apiKey: 'AIzaSyANdJNmvSgqNd6G8WyiJ40Y3SIzBTkh7Xs' });
 
 /**
  * Page 1: Generates a comprehensive ESG Audit Blueprint based on company profile.
