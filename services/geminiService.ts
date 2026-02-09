@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({ apiKey: 'AIzaSyANdJNmvSgqNd6G8WyiJ40Y3SIzBTkh7Xs' }
  * Page 1: Generates a comprehensive ESG Audit Blueprint based on company profile.
  */
 export async function generateAuditBlueprint(profile: any): Promise<AuditBlueprint> {
-  const model = 'gemini-3-pro-preview';
+  const model = 'gemini-3-flash-preview';
   const prompt = `
     Act as a senior ESG Auditor. Generate a detailed AuditBlueprint for the following company:
     Name: ${profile.name}
