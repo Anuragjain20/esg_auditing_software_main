@@ -129,7 +129,7 @@ export async function synthesizePipelineDSL(
 
   const parsed = JSON.parse(response.text || "{}");
   return {
-    pipeline_id: `pipe_${Date.now()}`,
+    id: `pipe_${Date.now()}`,
     topic: parsed.topic || evidenceType,
     evidence_type: evidenceType,
     input_schema: parsed.input_schema || [],
@@ -173,7 +173,7 @@ export async function repairPipelineDSL(
   const repaired = JSON.parse(response.text || "{}");
   return {
     ...repaired,
-    pipeline_id: currentDsl.pipeline_id,
+    id: currentDsl.id,
     version: (parseFloat(currentDsl.version) + 0.1).toFixed(1),
     repair_history: [
       ...currentDsl.repair_history,

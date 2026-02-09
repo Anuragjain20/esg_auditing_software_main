@@ -61,7 +61,7 @@ export function renderXhtmlReport(
   </section>
 
   <section>
-    <h2>2. Audit Methodology & Frameworks</h2>
+    <h2>2. Audit Methodology &amp; Frameworks</h2>
     <p>This audit was performed using the following frameworks:</p>
     <ul>
       ${blueprint.recommended_frameworks.map(f => `<li>${f}</li>`).join('')}
@@ -71,6 +71,7 @@ export function renderXhtmlReport(
 
   <section>
     <h2>3. Aggregated Disclosure Metrics</h2>
+    ${Object.keys(summary.metric_aggregates).length > 0 ? `
     <table>
       <thead>
         <tr>
@@ -91,22 +92,37 @@ export function renderXhtmlReport(
         `).join('')}
       </tbody>
     </table>
+    ` : '<p>No metrics were successfully aggregated in this audit run.</p>'}
   </section>
 
   <section>
     <h2>4. Validation Findings</h2>
     <p>Total documents processed: ${summary.total_files}</p>
-    <p>Success rate: ${((summary.success_count / summary.total_files) * 100).toFixed(1)}%</p>
-    ${summary.quality_summary.anomalies.length > 0 ? `
-      <h3>Identified Anomalies</h3>
+    <p>Success rate: ${((summary.success_count / (summary.total_files || 1)) * 100).toFixed(1)}%</p>
+    
+    ${summary.fail_count > 0 ? `
+      <h3>Failure Breakdown</h3>
+      <table>
+        <thead><tr><th>Error Type</th><th>Count</th></tr></thead>
+        <tbody>
+          ${Object.entries(summary.failure_breakdown).map(([error, count]) => `
+            <tr><td>${error}</td><td><strong>${count}</strong></td></tr>
+          `).join('')}
+        </tbody>
+      </table>
+    ` : ''}
+
+    ${summary.quality_summary.top_risks.length > 0 ? `
+      <h3>Top Identified Risks</h3>
       <ul>
-        ${summary.quality_summary.anomalies.map(a => `<li>${a}</li>`).join('')}
+        ${summary.quality_summary.top_risks.map(r => `<li>${r.risk} (found in ${r.count} documents)</li>`).join('')}
       </ul>
-    ` : '<p>No critical anomalies detected in success-path datasets.</p>'}
+    ` : '<p>No significant data quality risks identified in processed artifacts.</p>'}
   </section>
 
   <section>
     <h2>5. Corrective Action Plan</h2>
+    ${actions.length > 0 ? `
     <table>
       <thead>
         <tr><th>Topic</th><th>Priority</th><th>Required Action</th></tr>
@@ -121,10 +137,11 @@ export function renderXhtmlReport(
         `).join('')}
       </tbody>
     </table>
+    ` : '<p>No immediate corrective actions are required. Compliance state is nominal.</p>'}
   </section>
 
   <section>
-    <h2>6. Traceability & Integrity</h2>
+    <h2>6. Traceability &amp; Integrity</h2>
     <p>Each document is hashed and mapped to the chain of evidence. Root Traceability ID: <code>${timestamp}-${Math.random().toString(16).slice(2)}</code></p>
     <table>
       <thead>

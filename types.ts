@@ -68,7 +68,9 @@ export interface BatchSummary {
     avg_confidence: number;
     error_rate: number;
     anomalies: string[];
+    top_risks: Array<{ risk: string; count: number }>;
   };
+  failure_breakdown: Record<string, number>;
 }
 
 export interface ActionPayload {
@@ -91,7 +93,7 @@ export interface ReportPackage {
 }
 
 export interface PipelineSpecDSL {
-  pipeline_id: string;
+  id: string;
   topic: string;
   evidence_type: string;
   input_schema: Array<{ key: string; type: string; required: boolean }>;

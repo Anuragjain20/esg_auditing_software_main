@@ -17,36 +17,52 @@ export function processAuditData(
 ) {
   const totalFiles = results.length;
   const successResults = results.filter(r => r.success);
-  const failCount = totalFiles - successResults.length;
+  const failedResults = results.filter(r => !r.success);
+  const failCount = failedResults.length;
 
-  // Aggregating Metrics
+  // Aggregating Metrics: Data-driven approach to prevent zero-value bug
   const aggregates: Record<string, MetricAggregate> = {};
-  blueprint.required_metrics.forEach(m => {
-    aggregates[m.metric_id] = {
-      metric_id: m.metric_id,
-      total: 0,
-      unit: m.unit,
-      count: 0,
-      anomalies_detected: 0
-    };
-  });
-
   successResults.forEach(res => {
     Object.entries(res.metrics).forEach(([key, val]) => {
-      if (typeof val === 'number' && aggregates[key]) {
+      if (typeof val === 'number') {
+        if (!aggregates[key]) {
+          const blueprintMetric = blueprint.required_metrics.find(m => m.metric_id === key);
+          aggregates[key] = {
+            metric_id: key,
+            total: 0,
+            unit: blueprintMetric?.unit || 'N/A',
+            count: 0,
+            anomalies_detected: 0
+          };
+        }
         aggregates[key].total += val;
         aggregates[key].count += 1;
       }
     });
   });
 
-  // Anomaly Detection (Simplified Ratio Heuristic for Demo)
-  const anomalies: string[] = [];
-  successResults.forEach(res => {
-    if (res.validation.risks_flagged.length > 0) {
-      anomalies.push(...res.validation.risks_flagged);
-    }
+  // Failure Breakdown
+  const failureBreakdown: Record<string, number> = {};
+  failedResults.forEach(res => {
+    const errorCategory = res.validation.errors[0] || "Unknown Processing Error";
+    failureBreakdown[errorCategory] = (failureBreakdown[errorCategory] || 0) + 1;
   });
+
+  // Anomaly and Risk Aggregation
+  const anomalies: string[] = [];
+  const riskCounts: Record<string, number> = {};
+  successResults.forEach(res => {
+    res.validation.warnings.forEach(w => anomalies.push(`[WARN] ${w}`));
+    res.validation.risks_flagged.forEach(risk => {
+      anomalies.push(`[RISK] ${risk}`);
+      riskCounts[risk] = (riskCounts[risk] || 0) + 1;
+    });
+  });
+
+  const topRisks = Object.entries(riskCounts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3) // Get top 3 risks
+    .map(([risk, count]) => ({ risk, count }));
 
   // Readiness Score Calculation (0-100)
   const coverageRate = totalFiles > 0 ? (successResults.length / totalFiles) * 100 : 0;
@@ -66,17 +82,17 @@ export function processAuditData(
   if (failCount > 0) {
     actions.push({
       type: 'reprocess',
-      description: `Investigate and re-upload ${failCount} failed documents.`,
+      description: `Investigate and re-upload ${failCount} failed documents. Top error: ${Object.keys(failureBreakdown)[0] || 'N/A'}.`,
       priority: 'high',
       topic: 'Data Integrity'
     });
   }
-  if (anomalies.length > 0) {
+  if (topRisks.length > 0) {
     actions.push({
       type: 'ticket',
-      description: `Resolve ${anomalies.length} flagged anomalies in emission factor mappings.`,
+      description: `Resolve ${topRisks[0].count} instances of the top risk: "${topRisks[0].risk}".`,
       priority: 'medium',
-      topic: 'Environmental'
+      topic: 'Data Quality'
     });
   }
 
@@ -89,8 +105,10 @@ export function processAuditData(
     quality_summary: {
       avg_confidence: 0.92, // Simulated
       error_rate: failCount / (totalFiles || 1),
-      anomalies
-    }
+      anomalies,
+      top_risks: topRisks,
+    },
+    failure_breakdown: failureBreakdown,
   };
 
   return { summary, readinessScore, opinion, actions };
