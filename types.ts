@@ -91,7 +91,7 @@ export interface ReportPackage {
 }
 
 export interface PipelineSpecDSL {
-  id: string;
+  pipeline_id: string;
   topic: string;
   evidence_type: string;
   input_schema: Array<{ key: string; type: string; required: boolean }>;

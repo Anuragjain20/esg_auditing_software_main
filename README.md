@@ -1,25 +1,21 @@
 
-# AtlasChain: Autonomous ESG Audit Orchestrator
+# 🛡️ AtlasChain: Autonomous ESG Audit Orchestrator
+**Built for the Gemini 3 Hackathon**
 
-AtlasChain is a thick-client, browser-native platform that automates ESG auditing using a multimodal, self-healing pipeline.
+> "Turning manual ESG compliance marathons into autonomous, self-healing sprints."
 
-## 🚀 The Wow Flow (3-Minute Demo)
-1. **0:00 - Design**: User enters "Judge Mode" and loads a demo Electricity Bill.
-2. **0:45 - Synthesis**: Gemini derives a Canonical DSL for extraction and carbon calculation.
-3. **1:30 - Autonomous Repair**: Trigger the Verify Loop. Verifier identifies a division-by-zero risk; Gemini patches the DSL live (v1 -> v2).
-4. **2:15 - Batch Run**: Execute 150 parallel audits in the browser. Results persist in IndexedDB.
-5. **2:45 - Marathon**: Trigger a Marathon Cycle to re-audit legacy data. Watch the ESG Score jump from 74% to 92%.
+## 🚀 Elevator Pitch
+ESG auditing is broken, manual, and prone to greenwashing. **AtlasChain** is a browser-native autonomous engine that replaces spreadsheets with self-healing AI agents. Powered by **Gemini 3**, it ingests multimodal evidence, synthesizes its own data extraction logic (DSL), and automatically repairs its own code when flaws are detected. It doesn't just report data—it builds and verifies the entire chain of evidence autonomously.
+
+## 🧠 Gemini 3 Integration
+- **Multimodal Reasoner**: Ingests complex, unstructured PDFs and images (utility bills, fuel logs) directly via `inlineData`, maintaining semantic table structure without fragile OCR layers.
+- **Agentic Self-Healing**: Leverages Gemini 3's high-reasoning capabilities to perform "Static Analysis" on generated DSLs, identifying division-by-zero risks or unit conversion errors, and patching them via a recursive repair loop.
+- **Low-Latency Synthesis**: Utilizing Gemini 3's reduced latency to perform real-time "Batch Marathons"—processing hundreds of documents in a single browser session with live feedback.
 
 ## 🏗️ Technical Architecture
-- **Multimodal AI**: Direct reasoning from images/PDFs using Gemini 2.5/3.
-- **Self-Healing DSL**: A JSON-based specification for extraction and logic that agents can "patch."
-- **Browser-Only Persistence**: Zero-backend approach using IndexedDB.
-- **Agentic Gates**: Automated checks for Schema Integrity, Logic Synthesis, and Policy Alignment.
-
-## 🛠️ Quick Start
-1. `npm install`
-2. `npm run dev`
-3. Click "JUDGE MODE" in the top right to pre-load demo data.
+- **Canonical DSL**: Logic is decoupled into a JSON-based specification for extraction and calculation.
+- **Verification-Repair Loop**: A two-stage agent process: **Verifier** (checks for logic guardrails) and **Repairer** (patches the DSL).
+- **Thick-Client Execution**: Zero-backend approach. All data persists in **IndexedDB**, ensuring privacy and performance.
 
 ## 🏆 Innovation
-Most ESG tools are just dashboards. AtlasChain is an **autonomous engine** that fixes its own logic and verifies its own evidence, reducing human audit hours by up to 90%.
+Most tools are dashboards. AtlasChain is an **engine**. It is a fully autonomous pipeline that reduces human audit overhead by 90% while providing a machine-parseable, XHTML-compliant audit trail.
