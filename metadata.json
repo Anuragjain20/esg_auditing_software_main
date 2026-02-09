@@ -1,0 +1,8 @@
+{
+  "name": "Copy of AtlasChain - Autonomous ESG Audit Pipeline",
+  "description": "A high-performance autonomous pipeline for ESG compliance using multimodal reasoning and self-healing DSL architectures.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
